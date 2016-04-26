@@ -8,6 +8,7 @@ return [
     'routes' => [
         'static' => [
             'quiz' => 'Modules\\SocialQuiz\\Pages\\Quiz',
+            'quiz/results' => 'Modules\\SocialQuiz\\Pages\\AggregatedResults',
         ]
     ],
 ];
