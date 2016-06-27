@@ -8,7 +8,10 @@ return [
     'routes' => [
         'static' => [
             'quiz' => 'Modules\\SocialQuiz\\Pages\\Quiz',
-            'quiz/results' => 'Modules\\SocialQuiz\\Pages\\AggregatedResults',
+            'quiz/results' => 'Modules\\SocialQuiz\\Pages\\Results',
         ]
     ],
+    'overridable' => [
+        'Modules\\SocialQuiz\\Model\\SocialQuiz' => 'Overridable\\Modules\\SocialQuiz\\Model\\SocialQuiz',
+    ]
 ];

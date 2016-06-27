@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\SocialQuiz\Model;
+namespace Overridable\Modules\SocialQuiz\Model;
 
 use Lightning\Model\Object;
 use Lightning\Tools\ClientUser;
@@ -14,19 +14,34 @@ class SocialQuiz extends Object {
     const TABLE = 'social_quiz';
     const PRIMARY_KEY = 'quiz_id';
 
+    const TYPE_TEST = 1;
+    const TYPE_POLL = 2;
+
     protected $questions;
     protected $position;
     protected $data;
 
     public static function loadByName($name) {
-        $quiz = Database::getInstance()->selectRow('social_quiz', ['quiz_name' => $name]);
-        $quiz = new static($quiz);
-        $quiz->loadQuestions();
-        return $quiz;
+        if ($quiz = Database::getInstance()->selectRow('social_quiz', ['quiz_name' => $name])) {
+            $quiz = new static($quiz);
+            $quiz->loadQuestions();
+            return $quiz;
+        }
+        return null;
     }
 
-    public function loadQuestions() {
-        $this->questions = Database::getInstance()->selectAll('social_quiz_question', ['quiz_id' => $this->id]);
+    public static function loadByID($id) {
+        if ($quiz = parent::loadByID($id)) {
+            $quiz->loadQuestions();
+            return $quiz;
+        }
+        return null;
+    }
+
+    public function loadQuestions($force = false) {
+        if ($force || empty($this->questions)) {
+            $this->questions = Database::getInstance()->selectAll('social_quiz_question', ['quiz_id' => $this->id]);
+        }
     }
 
     public function setQuestionPosition($position) {
@@ -64,6 +79,24 @@ class SocialQuiz extends Object {
         return $answers;
     }
 
+    /**
+     * Get the scare as a percentage of 100 when in test quiz mode.
+     */
+    public function getScore() {
+        $this->loadQuestions();
+        $correct = 0;
+        foreach ($this->questions as $question) {
+            if ($this->data->answers[$question['question_id']]->value === $question['answer']) {
+                $correct ++;
+            }
+        }
+        return 100 * $correct / count($this->questions);
+    }
+
+    /**
+     * Render the answer options as form elements.
+     * @return string
+     */
     public function renderOptions() {
         $options = $this->getAnswers();
         switch ($this->questions[$this->position]['type']) {

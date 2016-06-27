@@ -2,8 +2,9 @@
 
 namespace Modules\SocialQuiz\Pages;
 
-use Lightning\Tools\Database;
+use Lightning\Tools\Configuration;
 use Lightning\Tools\Navigation;
+use Lightning\Tools\PHP;
 use Lightning\Tools\Session;
 use Lightning\Tools\Template;
 use Lightning\View\Page;
@@ -16,6 +17,8 @@ class Quiz extends Page {
     protected $session;
     protected $quizData;
     protected $questions;
+
+    protected $fullWidth = true;
 
     /**
      * @var SocialQuiz
@@ -30,15 +33,25 @@ class Quiz extends Page {
         parent::__construct();
         $this->session = Session::getInstance();
         $this->quiz = SocialQuiz::loadByName(Request::get('q'));
+        if (empty($this->quiz) && $default_id = Configuration::get('social_quiz.default_quiz')) {
+            $this->quiz = SocialQuiz::loadByID($default_id);
+        }
         if (empty($this->quiz)) {
             throw new \Exception('Invalid Quiz');
         }
         $this->quizData = !empty($this->session->content->quiz_data->{$this->quiz->quiz_name}) ? $this->session->content->quiz_data->{$this->quiz->quiz_name} : new stdClass();
-        $this->quizData->answers = !empty($this->quizData->answers) ? (array) $this->quizData->answers : [];
+        $this->quizData->answers = !empty($this->quizData->answers) ? PHP::ObjectToArray($this->quizData->answers) : [];
         $this->quiz->setData($this->quizData);
+        $this->meta['title'] = $this->quiz->title;
     }
 
     public function get() {
+        $p = Request::get('p', Request::TYPE_INT);
+        if ($p !== null && !empty($this->quiz->preview_image)) {
+            // This is a link from a previous test. Set the preview image to the score.
+            $this->meta['image'] = str_replace('%', $p, Configuration::get('web_root') . $this->quiz->preview_image);
+        }
+
         if (empty($this->quizData->page)) {
             $this->quizData->page = 0;
         }
@@ -49,12 +62,14 @@ class Quiz extends Page {
             // Clear the results from the session.
             unset($this->session->content->quiz_data->{$this->quiz->quiz_name});
             $this->session->save();
-            if ($this->quiz->final_page == 'results') {
-                Navigation::redirect('/quiz/results', ['q' => $this->quiz->quiz_name]);
+            if ($this->quiz->final_page == 'results' || empty($this->quiz->final_page)) {
+                $params = ['q' => $this->quiz->quiz_name];
+                if ($this->quiz->type == SocialQuiz::TYPE_TEST) {
+                    $params['score'] = $this->quiz->getScore();
+                }
+                Navigation::redirect('/quiz/results', $params, false, true);
             } else if (!empty($this->quiz->final_page)) {
                 Navigation::redirect($this->quiz->final_page);
-            } else {
-                $this->page = ['share', 'SocialQuiz'];
             }
         } else {
             $this->page = ['quiz', 'SocialQuiz'];
