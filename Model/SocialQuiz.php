@@ -101,11 +101,11 @@ class SocialQuiz extends Object {
         $options = $this->getAnswers();
         switch ($this->questions[$this->position]['type']) {
             case 'select':
-                return BasicHTML::select('answer', $options);
+                return BasicHTML::select('answer', $options, null, ['required' => true]);
                 break;
             case 'radio':
             default:
-                return BasicHTML::radioGroup('answer', $options);
+                return BasicHTML::radioGroup('answer', $options, null, ['required' => true]);
         }
     }
 
