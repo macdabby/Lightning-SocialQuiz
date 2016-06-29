@@ -49,6 +49,18 @@ class Quiz extends Page {
         $p = Request::get('p', Request::TYPE_INT);
         if ($p !== null && !empty($this->quiz->preview_image)) {
             // This is a link from a previous test. Set the preview image to the score.
+            if (!empty($this->quiz->preview_images)) {
+                $images = json_decode($this->quiz->preview_images);
+                $diff = INF;
+                $best = 0;
+                foreach ($images as $i) {
+                    if (abs($i - $p) < $diff) {
+                        $best = $i;
+                        $diff = abs($best - $p);
+                    }
+                }
+                $p = $best;
+            }
             $this->meta['image'] = str_replace('%', $p, Configuration::get('web_root') . $this->quiz->preview_image);
         }
 
