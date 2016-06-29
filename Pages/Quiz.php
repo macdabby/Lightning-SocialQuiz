@@ -3,10 +3,12 @@
 namespace Modules\SocialQuiz\Pages;
 
 use Lightning\Tools\Configuration;
+use Lightning\Tools\Messenger;
 use Lightning\Tools\Navigation;
 use Lightning\Tools\PHP;
 use Lightning\Tools\Session;
 use Lightning\Tools\Template;
+use Lightning\View\JS;
 use Lightning\View\Page;
 use Modules\SocialQuiz\Model\SocialQuiz;
 use Overridable\Lightning\Tools\Request;
@@ -94,6 +96,20 @@ class Quiz extends Page {
         $page = Request::post('page', 'int');
         $answer = Request::post('answer');
         $this->quiz->setQuestionPosition($page);
+
+        // Check for a valid answer.
+        if (!empty($this->quiz->show_answers)) {
+            if ($this->quiz->getCorrectAnswerIndex() == $answer) {
+                Messenger::message('Correct!');
+            }
+            else if ($this->quiz->show_answers == SocialQuiz::SHOW_CORRECT_ANSWER) {
+                Messenger::error('Wrong! The correct answer is: ' . $this->quiz->getAnswer());
+            }
+            else {
+                Messenger::error('Wrong!');
+            }
+        }
+
         $this->quizData->answers[$this->quiz->getQuestionID()] = $this->quiz->getAnswerValue($answer);
         $this->quizData->page = $page + 1;
         $this->quiz->saveData();

@@ -17,6 +17,10 @@ class SocialQuiz extends Object {
     const TYPE_TEST = 1;
     const TYPE_POLL = 2;
 
+    const SHOW_NOTHING = 0;
+    const SHOW_CORRECT_OR_INCORRECT = 1;
+    const SHOW_CORRECT_ANSWER = 2;
+
     protected $questions;
     protected $position;
     protected $data;
@@ -77,6 +81,18 @@ class SocialQuiz extends Object {
             $answers = $answers[$this->data->answerSplit->{$this->position}];
         }
         return $answers;
+    }
+
+    /**
+     * Return the current answer at the current position.
+     */
+    public function getAnswer() {
+        $answers = $this->getAnswers();
+        return $answers[$this->getCorrectAnswerIndex()];
+    }
+
+    public function getCorrectAnswerIndex() {
+        return $this->questions[$this->position]['answer'];
     }
 
     /**
