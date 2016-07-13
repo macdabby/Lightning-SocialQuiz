@@ -20,8 +20,6 @@ class Quiz extends Page {
     protected $quizData;
     protected $questions;
 
-    protected $fullWidth = true;
-
     /**
      * @var SocialQuiz
      */
