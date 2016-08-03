@@ -1,4 +1,4 @@
-<section>
+<section class="quiz">
     <div class="row">
         <div class="columns">
             <h1><?=$quiz->title;?></h1>
