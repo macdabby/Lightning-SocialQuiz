@@ -8,10 +8,9 @@ use Lightning\Tools\Navigation;
 use Lightning\Tools\PHP;
 use Lightning\Tools\Session;
 use Lightning\Tools\Template;
-use Lightning\View\JS;
 use Lightning\View\Page;
 use Modules\SocialQuiz\Model\SocialQuiz;
-use Overridable\Lightning\Tools\Request;
+use Lightning\Tools\Request;
 use stdClass;
 
 class Quiz extends Page {

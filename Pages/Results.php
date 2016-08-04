@@ -6,7 +6,7 @@ use Lightning\Tools\Configuration;
 use Lightning\Tools\Request;
 use Lightning\Tools\Template;
 use Modules\SocialQuiz\Model\SocialQuiz;
-use Overridable\Lightning\Tools\Security\Encryption;
+use Lightning\Tools\Security\Encryption;
 use Source\View\Page;
 
 class Results extends Page {

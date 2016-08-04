@@ -1,6 +1,6 @@
 <?php
 
-namespace Overridable\Modules\SocialQuiz\Model;
+namespace Modules\SocialQuiz\Model;
 
 use Lightning\Model\Object;
 use Lightning\Tools\ClientUser;
@@ -10,7 +10,7 @@ use Lightning\Tools\Session;
 use Lightning\View\Field\BasicHTML;
 use stdClass;
 
-class SocialQuiz extends Object {
+class SocialQuizOverridable extends Object {
     const TABLE = 'social_quiz';
     const PRIMARY_KEY = 'quiz_id';
 

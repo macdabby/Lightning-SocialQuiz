@@ -11,7 +11,4 @@ return [
             'quiz/results' => 'Modules\\SocialQuiz\\Pages\\Results',
         ]
     ],
-    'overridable' => [
-        'Modules\\SocialQuiz\\Model\\SocialQuiz' => 'Overridable\\Modules\\SocialQuiz\\Model\\SocialQuiz',
-    ]
 ];

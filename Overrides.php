@@ -6,4 +6,4 @@
 
 namespace Modules\SocialQuiz\Model;
 
-class SocialQuiz extends \Overridable\Modules\SocialQuiz\Model\SocialQuiz {}
+class SocialQuiz extends \Modules\SocialQuiz\Model\SocialQuizOverridable {}
