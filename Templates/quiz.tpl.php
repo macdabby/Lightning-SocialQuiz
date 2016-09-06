@@ -11,7 +11,7 @@
                 <?= $quiz->renderOptions(); ?>
                 <input type="hidden" name="q" value="<?=$quiz->quiz_name;?>">
                 <input type="hidden" name="page" value="<?= $quiz->getQuestionPosition(); ?>">
-                <input type="submit" name="submit" value="Submit" class="button" />
+                <button type="submit" name="submit" class="button right">Next&nbsp;&nbsp;<i class="fa fa-arrow-right"></i></button>
             </form>
         </div>
     </div>
