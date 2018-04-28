@@ -6,7 +6,7 @@ use Lightning\Model\Object;
 use Lightning\Tools\ClientUser;
 use Lightning\Tools\Database;
 use Lightning\Tools\Request;
-use Lightning\Tools\Session;
+use Lightning\Tools\Session\DBSession;
 use Lightning\View\Field\BasicHTML;
 use stdClass;
 
@@ -145,7 +145,7 @@ class SocialQuizOverridable extends Object {
      * Save the data to the session.
      */
     public function saveData() {
-        $session = Session::getInstance();
+        $session = DBSession::getInstance();
         if (empty($session->content->quiz_data)) {
             $session->content->quiz_data = new stdClass();
         }

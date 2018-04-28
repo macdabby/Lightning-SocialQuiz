@@ -2,11 +2,12 @@
 
 namespace Modules\SocialQuiz\Pages;
 
+use Exception;
 use Lightning\Tools\Configuration;
 use Lightning\Tools\Messenger;
 use Lightning\Tools\Navigation;
 use Lightning\Tools\PHP;
-use Lightning\Tools\Session;
+use Lightning\Tools\Session\DBSession;
 use Lightning\Tools\Template;
 use Lightning\View\Page;
 use Modules\SocialQuiz\Model\SocialQuiz;
@@ -30,13 +31,13 @@ class Quiz extends Page {
 
     public function __construct() {
         parent::__construct();
-        $this->session = Session::getInstance();
+        $this->session = DBSession::getInstance();
         $this->quiz = SocialQuiz::loadByName(Request::get('q'));
         if (empty($this->quiz) && $default_id = Configuration::get('social_quiz.default_quiz')) {
             $this->quiz = SocialQuiz::loadByID($default_id);
         }
         if (empty($this->quiz)) {
-            throw new \Exception('Invalid Quiz');
+            throw new Exception('Invalid Quiz');
         }
         $this->quizData = !empty($this->session->content->quiz_data->{$this->quiz->quiz_name}) ? $this->session->content->quiz_data->{$this->quiz->quiz_name} : new stdClass();
         $this->quizData->answers = !empty($this->quizData->answers) ? PHP::ObjectToArray($this->quizData->answers) : [];
